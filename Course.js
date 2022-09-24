@@ -1,18 +1,26 @@
+const { makeObservable, observable, action } = require("mobx");
 const Topic = require("./Topic");
 
 class Course {
   topics = [];
+  isCompleted = false;
 
   constructor({ id, name, topics }) {
     this.id = id;
     this.name = name;
-    if (topics) {
-      this.topics = topics.map((t) => new Topic(t));
-    }
+    topics && topics?.map((t) => this.addTopic(t));
+
+    makeObservable(this, {
+      name: observable,
+      topics: observable,
+      isCompleted: observable,
+      addTopic: action,
+      reomveTopic: action,
+    });
   }
 
-  addTopic(id, name, duration) {
-    this.topics.push(new Topic(id, name, duration));
+  addTopic({ id, name, duration, sets }) {
+    this.topics.push(new Topic(id, name, duration, sets));
     // console.log("Successfully added the topic");
   }
 

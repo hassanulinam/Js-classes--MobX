@@ -1,8 +1,10 @@
+const { makeObservable, observable, action } = require("mobx");
 const Course = require("./Course");
 const inputData = require("./inputData");
 
 class Track {
   courses = [];
+  isCompleted = false;
 
   constructor(td) {
     this.id = td.id;
@@ -10,6 +12,14 @@ class Track {
     if (this.courses) {
       this.courses = td.courses.map((c) => new Course(c));
     }
+
+    makeObservable(this, {
+      name: observable,
+      courses: observable,
+      isCompleted: observable,
+      addCourse: action,
+      removeCourse: action,
+    });
   }
 
   addCourse(id, name) {

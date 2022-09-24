@@ -1,10 +1,24 @@
+const { makeObservable, observable, action } = require("mobx");
 const BaseSet = require("./setModels/BaseSet");
 
 class LearningSet extends BaseSet {
+  isCompleted = false;
+
   constructor(id, name) {
     super(id);
     this.name = name;
-    this.isCompleted = false;
+
+    makeObservable(this, {
+      name: observable,
+      isCompleted: observable,
+      addDiscussion: action,
+      getVideoDetails: action,
+      getDiscussions: action,
+      getNotes: action,
+      updateSessionStatus: action,
+      submitFeedback: action,
+      postTheDoubt: action,
+    });
   }
 
   addDiscussion(title) {
@@ -13,15 +27,15 @@ class LearningSet extends BaseSet {
   }
 
   getVideoDetails(id) {
-    console.log("Some video details");
+    return "Some video details";
   }
 
   getNotes() {
-    console.log("Some notes");
+    return "Some notes";
   }
 
   getDiscussions() {
-    console.log("Some discussions");
+    return "Some discussions";
   }
 
   updateSessionStatus() {

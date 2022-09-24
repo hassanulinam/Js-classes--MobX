@@ -14,7 +14,7 @@ class Topic {
     this.id = id;
     this.name = name;
     this.duration = duration;
-    sets && sets.forEach((s) => this.addSet(s.type, s.id));
+    sets && sets.forEach((s) => this.addSet(s));
 
     makeObservable(this, {
       name: observable,
@@ -32,7 +32,7 @@ class Topic {
     console.log("Successfully edited the topic");
   }
 
-  addSet(type, id, nQuestions = 6) {
+  addSet({ type, id, nQuestions = 6 }) {
     switch (type) {
       case setTypes.mcq: {
         this.sets.push(new McqSet(id, nQuestions));
