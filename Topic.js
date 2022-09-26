@@ -4,11 +4,27 @@ const AssgSet = require("./sets/AssgSet");
 const CodingSet = require("./sets/CodingSet");
 const LearningSet = require("./sets/LearningSet");
 const setTypes = require("./models/setTypes");
-const { makeObservable, observable, action } = require("mobx");
+const {
+  makeObservable,
+  observable,
+  action,
+  flow,
+  runInAction,
+} = require("mobx");
+const makeAsyncCall = require("./utils/makeAsyncCall");
+const apiConst = require("./models/apiConst");
+const setMapper = {
+  [setTypes.mcq]: (id, nqs) => new McqSet(id, nqs),
+  [setTypes.practice]: (id, nqs) => new PracticeSet(id, nqs),
+  [setTypes.assg]: (id, nqs) => new AssgSet(id, nqs),
+  [setTypes.coding]: (id, nqs) => new CodingSet(id, nqs),
+  [setTypes.learning]: (id, nqs) => new LearningSet(id, nqs),
+};
 
 class Topic {
   sets = [];
   isCompleted = false;
+  apiStatus = apiConst.initial;
 
   constructor({ id, name, duration, sets }) {
     this.id = id;
@@ -19,11 +35,18 @@ class Topic {
       name: observable,
       sets: observable,
       duration: observable,
+      apiStatus: observable,
       isCompleted: observable,
-      addSet: action.bound,
+      setApiStatus: action.bound,
+      addSets: flow.bound,
       editTopic: action.bound,
     });
-    sets.forEach((s) => this.addSet(s));
+
+    this.addSets(sets);
+  }
+
+  setApiStatus(status) {
+    this.apiStatus = status;
   }
 
   editTopic(name, duration) {
@@ -32,29 +55,18 @@ class Topic {
     console.log("Successfully edited the topic");
   }
 
-  addSet({ type, id }, nQuestions = 6) {
-    switch (type) {
-      case setTypes.mcq: {
-        this.sets.push(new McqSet(id, nQuestions));
-        break;
-      }
-      case setTypes.practice: {
-        this.sets.push(new PracticeSet(id, nQuestions));
-        break;
-      }
-      case setTypes.assg: {
-        this.sets.push(new AssgSet(id, nQuestions));
-        break;
-      }
-      case setTypes.learning: {
-        this.sets.push(new LearningSet(id, nQuestions));
-        break;
-      }
-      case setTypes.coding: {
-        this.sets.push(new CodingSet(id, nQuestions));
-        break;
-      }
-    }
+  *addSets(newSets, nQuestions = 6) {
+    yield makeAsyncCall(
+      () => {
+        runInAction(() => {
+          this.sets = newSets.map((s) => setMapper[s.type](s.id, nQuestions));
+        });
+      },
+      (err) => {
+        console.log("error occured while adding sets");
+      },
+      this.setApiStatus
+    );
   }
 }
 
