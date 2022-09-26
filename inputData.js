@@ -29,6 +29,7 @@ module.exports = {
           id: "topic-2",
           name: "html-images",
           duration: "3hrs",
+          sets: [],
         },
       ],
     },
@@ -40,6 +41,7 @@ module.exports = {
           id: "topic-1",
           name: "class-animations",
           duration: "3hrs",
+          sets: [],
         },
         {
           id: "topic-2",

@@ -9,11 +9,11 @@ class AssgSet extends CodingRelatedSet {
 
 module.exports = AssgSet;
 
-const as = new AssgSet(1340, 3);
-console.log(as);
+// const as = new AssgSet(1340, 3);
+// console.log(as);
 
-autorun(() => {
-  console.log("[autorun]", as.questions[0].isAnswered);
-});
+// autorun(() => {
+//   console.log("[autorun]", as.questions[0].isAnswered);
+// });
 
-as.questions[0].submitCode();
+// as.questions[0].submitCode();

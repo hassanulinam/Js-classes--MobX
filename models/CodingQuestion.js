@@ -24,7 +24,7 @@ class CodingQuestion {
       listOfSubmissions: computed,
       hints: computed,
       solutions: computed,
-      answerStatus: action,
+      changeAnswerStatus: action,
     });
 
     this.id = "sq-" + (id + 1);

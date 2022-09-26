@@ -1,12 +1,6 @@
 const BaseSet = require("./BaseSet");
 const CodingQuestion = require("../../models/CodingQuestion");
-const {
-  makeObservable,
-  observable,
-  computed,
-  autorun,
-  runInAction,
-} = require("mobx");
+const { makeObservable, observable, computed } = require("mobx");
 
 class CodingRelatedSet extends BaseSet {
   questions = [];

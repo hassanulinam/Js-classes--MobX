@@ -1,4 +1,4 @@
-const { makeObservable, observable, action } = require("mobx");
+const { makeObservable, observable, action, toJS } = require("mobx");
 const Course = require("./Course");
 const inputData = require("./inputData");
 
@@ -9,9 +9,7 @@ class Track {
   constructor(td) {
     this.id = td.id;
     this.name = td.name;
-    if (this.courses) {
-      this.courses = td.courses.map((c) => new Course(c));
-    }
+    td.courses?.forEach((c) => this.addCourse(c));
 
     makeObservable(this, {
       name: observable,
@@ -22,8 +20,8 @@ class Track {
     });
   }
 
-  addCourse(id, name) {
-    this.courses.push(new Course(id, name));
+  addCourse(c) {
+    this.courses.push(new Course(c));
     // console.log("Successfully added the Course");
   }
 
@@ -34,12 +32,11 @@ class Track {
 }
 
 const t1 = new Track(inputData);
+t1.courses[0].topics[0].sets[0].fetchQuestions();
+console.log(t1.courses[0].topics[0].sets[0].questions);
+// console.log(t1.courses[0].topics[0].sets);
 
-t1.courses[0].topics[0].sets[1];
+// console.log(t1.courses[0].topics[0].sets[1].questions[0].answer);
 
-t1.courses[0].topics[0].sets[1].saveCode("sq-1", "print(213)");
-
-console.log(t1.courses[0].topics[0].sets[1].questions[0].answer);
-
-t1.courses[0].topics[0].sets[1].resetCode("sq-1");
-console.log(t1.courses[0].topics[0].sets[1].questions[0].answer);
+// t1.courses[0].topics[0].sets[1].resetCode("sq-1");
+// console.log(t1.courses[0].topics[0].sets[1].questions[0].answer);

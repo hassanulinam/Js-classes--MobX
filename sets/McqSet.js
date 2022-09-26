@@ -4,23 +4,22 @@ const {
   action,
   computed,
   autorun,
+  toJS,
 } = require("mobx");
 const McqQuestion = require("../models/McqQuestion");
 const BaseSet = require("./setModels/BaseSet");
 
 class McqSet extends BaseSet {
   questions = [];
+  offset = 0;
+  limit = 5;
 
-  constructor(id, nQuestions, offset = 0, limit = 5) {
+  constructor(id, nQuestions) {
     super(id);
     this.n = nQuestions;
-    this.offset = offset;
-    this.limit = limit;
 
     makeObservable(this, {
-      offset: observable,
-      limit: observable,
-      questions: observable,
+      questions: observable.struct,
       fetchQuestions: action,
       allQuestions: computed.struct,
       instructions: computed,

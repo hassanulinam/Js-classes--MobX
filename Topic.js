@@ -8,19 +8,19 @@ const { makeObservable, observable, action } = require("mobx");
 
 class Topic {
   sets = [];
-  isCopmleted = false;
+  isCompleted = false;
 
   constructor({ id, name, duration, sets }) {
     this.id = id;
     this.name = name;
     this.duration = duration;
-    sets && sets.forEach((s) => this.addSet(s));
+    sets.forEach((s) => this.addSet(s));
 
     makeObservable(this, {
       name: observable,
       sets: observable,
       duration: observable,
-      isCopmleted: observable,
+      isCompleted: observable,
       addSet: action,
       editTopic: action,
     });
@@ -32,7 +32,8 @@ class Topic {
     console.log("Successfully edited the topic");
   }
 
-  addSet({ type, id, nQuestions = 6 }) {
+  addSet({ type, id }, nQuestions = 6) {
+    console.log("adding set..");
     switch (type) {
       case setTypes.mcq: {
         this.sets.push(new McqSet(id, nQuestions));
@@ -59,3 +60,26 @@ class Topic {
 }
 
 module.exports = Topic;
+
+const inputTopics = {
+  id: "topic-1",
+  name: "html-semantics",
+  duration: "3hrs",
+  sets: [
+    {
+      type: "mcqs",
+      id: "mcqs-1",
+    },
+    {
+      type: "learning",
+      id: "ls-1",
+    },
+    {
+      type: "coding",
+      id: "cds-1",
+    },
+  ],
+};
+
+// const t1 = new Topic(inputTopics);
+// console.log(t1.sets[0]);

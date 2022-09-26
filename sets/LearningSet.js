@@ -2,15 +2,12 @@ const { makeObservable, observable, action } = require("mobx");
 const BaseSet = require("./setModels/BaseSet");
 
 class LearningSet extends BaseSet {
-  isCompleted = false;
-
   constructor(id, name) {
     super(id);
     this.name = name;
 
     makeObservable(this, {
       name: observable,
-      isCompleted: observable,
       addDiscussion: action,
       getVideoDetails: action,
       getDiscussions: action,
