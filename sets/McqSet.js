@@ -1,11 +1,4 @@
-const {
-  makeObservable,
-  observable,
-  action,
-  computed,
-  autorun,
-  toJS,
-} = require("mobx");
+const { makeObservable, observable, action, computed } = require("mobx");
 const McqQuestion = require("../models/McqQuestion");
 const BaseSet = require("./setModels/BaseSet");
 

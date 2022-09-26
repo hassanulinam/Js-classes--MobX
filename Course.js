@@ -1,32 +1,62 @@
-const { makeObservable, observable, action, toJS } = require("mobx");
+const {
+  makeObservable,
+  observable,
+  flow,
+  action,
+  runInAction,
+} = require("mobx");
+const apiConst = require("./models/apiConst");
 const Topic = require("./Topic");
+const makeAsyncCall = require("./utils/makeAsyncCall");
 
 class Course {
   topics = [];
   isCompleted = false;
+  apiStatus = apiConst.initial;
 
   constructor({ id, name, topics }) {
     this.id = id;
     this.name = name;
-    topics?.map((t) => this.addTopic(t));
 
     makeObservable(this, {
       name: observable,
       topics: observable,
       isCompleted: observable,
-      addTopic: action,
-      reomveTopic: action,
+      apiStatus: observable,
+      setApiStatus: action.bound,
+      addTopics: flow.bound,
+      removeTopic: flow.bound,
     });
+
+    this.addTopics(topics);
   }
 
-  addTopic(t) {
-    this.topics.push(new Topic(t));
-    // console.log("Successfully added the topic");
+  setApiStatus(status) {
+    this.apiStatus = status;
   }
 
-  reomveTopic(topicId) {
-    this.topics = this.topics.filter((t) => t.id !== topicId);
-    // console.log("Successfully removed the topic");
+  *addTopics(newTopics) {
+    yield makeAsyncCall(
+      () => {
+        runInAction(() => (this.topics = newTopics.map((t) => new Topic(t))));
+      },
+      (err) => {
+        console.error("error occured while adding topic: " + err);
+      },
+      this.setApiStatus
+    );
+  }
+
+  *removeTopic(topicId) {
+    yield makeAsyncCall(
+      () => {
+        this.topics = this.topics.filter((t) => t.id !== topicId);
+      },
+      (err) => {
+        console.error("error occured while removing topic: " + err);
+      },
+      this.setApiStatus
+    );
   }
 }
 
